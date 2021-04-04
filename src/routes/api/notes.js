@@ -36,7 +36,11 @@ router.get('/:id', (req, res) => {
 router.put('/:id', (req, res) => {
   const { id } = req.params
   const { note: updatedNote } = req.body
-  res.json(notes.update(id, updatedNote))
+  const response = notes.update(id, updatedNote)
+  if (response.error) {
+    res.status(400)
+  }
+  res.send(response)
 })
 
 router.delete('/:id', (req, res) => {
