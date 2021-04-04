@@ -19,5 +19,5 @@ app.use(notFound)
 app.use(errorController)
 
 app.listen(port, () =>
-  logger.info(`Appliecation started at http://localhost:${port}`),
+  logger.success(`Appliecation started at http://localhost:${port}`),
 )
