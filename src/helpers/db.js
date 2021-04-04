@@ -12,8 +12,8 @@ let notes = []
 
 const note = {
   id: 'randomid',
-  title: 'note title.',
-  content: 'note content',
+  title: 'Eric Castellanos',
+  content: 'Conent for lab for this week',
 }
 
 notes.push(note)
