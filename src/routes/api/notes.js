@@ -1,28 +1,47 @@
 import { Router } from 'express'
 
+import * as notes from '../../helpers/db'
+import logger from '../../helpers/logger'
+
 const router = Router()
 
 router.get('/', (req, res) => {
-  res.json({ msg: 'Get all notes' })
+  res.send(notes.getAll())
 })
 
 router.post('/', (req, res) => {
-  res.json({ msg: 'create a notes' })
+  const { note: newNote } = req.body
+  if (newNote) {
+    const note = notes.add(newNote)
+    if (note.error) {
+      res.status(400)
+    }
+    res.send(note)
+  } else {
+    res.status(400).send({ msg: 'Bad Status' })
+  }
 })
 
 router.get('/:id', (req, res) => {
   const { id } = req.params
-  res.json({ msg: `Getting note ${id}` })
+  const note = notes.getByID(id)
+  if (note) {
+    res.send(note)
+  } else {
+    logger.warn(`Note ${id} not found`)
+    res.status(404).send({})
+  }
 })
 
 router.put('/:id', (req, res) => {
   const { id } = req.params
-  res.json({ msg: `Updating note ${id}` })
+  const { note: updatedNote } = req.body
+  res.json(notes.update(id, updatedNote))
 })
 
 router.delete('/:id', (req, res) => {
   const { id } = req.params
-  res.json({ msg: `Deleting note ${id}` })
+  res.send(notes.removeByID(id))
 })
 
 export default router
