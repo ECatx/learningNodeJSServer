@@ -13,7 +13,7 @@ export const getAll = async () => {
 }
 
 export const getByID = async (id) => {
-  const note = await db('notes').where({ id }).first
+  const note = await db('notes').where({ id }).first()
   if (note) return note
   return null
 }
@@ -47,9 +47,11 @@ export const update = async (id, n) => {
   }
   let note = await getByID(id)
   if (note) {
-    await db('notes')
-      .where({ id })
-      .update({ title: n.title, content: n.content })
+    await db('notes').where({ id }).update({
+      title: n.title,
+      content: n.content,
+      updated_at: new Date().toLocaleString(),
+    })
     note = await getByID(id)
     return note
   }

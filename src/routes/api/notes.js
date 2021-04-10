@@ -10,10 +10,10 @@ router.get('/', async (req, res) => {
   res.send(notes)
 })
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const { note: newNote } = req.body
   if (newNote) {
-    const note = noteService.add(newNote)
+    const note = await noteService.add(newNote)
     if (note.error) {
       res.status(400)
     }
@@ -34,19 +34,19 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   const { id } = req.params
   const { note: updatedNote } = req.body
-  const response = noteService.update(id, updatedNote)
+  const response = await noteService.update(id, updatedNote)
   if (response.error) {
     res.status(400)
   }
   res.send(response)
 })
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   const { id } = req.params
-  res.send(noteService.removeByID(id))
+  res.send(await noteService.removeByID(id))
 })
 
 export default router
