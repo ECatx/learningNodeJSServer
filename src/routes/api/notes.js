@@ -1,18 +1,19 @@
 import { Router } from 'express'
 
-import * as notes from '../../helpers/db'
+import * as noteService from '../../services/notes'
 import logger from '../../helpers/logger'
 
 const router = Router()
 
-router.get('/', (req, res) => {
-  res.send(notes.getAll())
+router.get('/', async (req, res) => {
+  const notes = await noteService.getAll()
+  res.send(notes)
 })
 
 router.post('/', (req, res) => {
   const { note: newNote } = req.body
   if (newNote) {
-    const note = notes.add(newNote)
+    const note = noteService.add(newNote)
     if (note.error) {
       res.status(400)
     }
@@ -22,9 +23,9 @@ router.post('/', (req, res) => {
   }
 })
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   const { id } = req.params
-  const note = notes.getByID(id)
+  const note = await noteService.getByID(id)
   if (note) {
     res.send(note)
   } else {
@@ -36,7 +37,7 @@ router.get('/:id', (req, res) => {
 router.put('/:id', (req, res) => {
   const { id } = req.params
   const { note: updatedNote } = req.body
-  const response = notes.update(id, updatedNote)
+  const response = noteService.update(id, updatedNote)
   if (response.error) {
     res.status(400)
   }
@@ -45,7 +46,7 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   const { id } = req.params
-  res.send(notes.removeByID(id))
+  res.send(noteService.removeByID(id))
 })
 
 export default router
